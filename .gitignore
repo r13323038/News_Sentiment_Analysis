@@ -1,0 +1,22 @@
+# .gitignore
+
+# 忽略所有資料
+data/
+data/*
+*.csv
+*.xlsx
+
+# 忽略模型權重檔
+models/
+*.bin
+*.pt
+*.pth
+
+# 忽略 Python 快取
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# 忽略虛擬環境
+.env
+.finbert/
