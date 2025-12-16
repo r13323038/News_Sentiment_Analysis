@@ -23,6 +23,7 @@
     * **來源**: Yahoo Finance (透過 `yfinance` API)
     * **範圍**: 過去 30 天
     * **用途**: 獲取目標指數的每日收盤價 (Close Price) 與成交量，用於與情緒指標進行時間序列對齊與相關性分析。
+  
 ## 技術棧 (Tech Stack)
 * **語言**: Python 3.x
 * **數據處理**: Pandas, NumPy
@@ -36,7 +37,18 @@
 1.  **01_scraper.ipynb**: 
     * 負責從財經新聞網站爬取標題與內文。
     * 資料清洗與初步格式化。
-2.  **02_bert_training.ipynb**: 
+2.  **02_bert_traininResults)
+### 相關性熱力圖 (Correlation Heatmap)
+| S&P 500 (SPY) | NASDAQ-100 (QQQ) | Dow Jones (DIA) | Small Cap (IWM) |
+| :-: | :-: | :-: | :-: |
+| ![SPY](notebooks/plots/heatmap_S&P_500_SPY.png) | ![QQQ](notebooks/plots/heatmap_NASDAQ-100_QQQ.png) | ![DIA](notebooks/plots/heatmap_Dow_Jones_DIA.png) | ![IWM](notebooks/plots/heatmap_Small_Cap_IWM.png) |
+
+### 每日結果 (Daily_result)
+| S&P 500 (SPY) | NASDAQ-100 (QQQ) | Dow Jones (DIA) | Small Cap (IWM) |
+| :-: | :-: | :-: | :-: |
+| ![SPY](notebooks/plots/daily_result_S&P_500_SPY.png) | ![QQQ](notebooks/plots/daily_result_NASDAQ-100_QQQ.png) | ![DIA](notebooks/plots/daily_result_Dow_Jones_DIA.png) | ![IWM](notebooks/plots/daily_result_Small_Cap_IWM.png) |
+
+g.ipynb**: 
     * 載入預訓練 BERT 模型。
     * 針對財經文本進行微調 (Fine-tuning) 或直接推論。
 3.  **03_inference.ipynb**: 
@@ -46,9 +58,4 @@
     * 進行時間序列分析與相關性檢定。
     * 產出視覺化圖表。
 
-## 📊 分析結果 (Key Results)
-### 相關性熱力圖 (Correlation Heatmap)
-| S&P 500 | NASDAQ-100 | Dow Jones (DIA) | Small Cap (IWM) |
-| :-: | :-: | :-: | :-: |
-| ![SPY](notebooks/plots/heatmap_S&P%20500%20(SPY).png) | ![QQQ](notebooks/plots/heatmap_NASDAQ-100%20(QQQ).png) | ![DIA](notebooks/plots/heatmap_Dow%20Jones (DIA).png) | ![IWM](notebooks/plots/heatmap_NASDAQ-100%20(QQQ).png) |
-
+## 📊 分析結果 (Key 
