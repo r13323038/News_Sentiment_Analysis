@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+
+/* 讓圖片不超過頁面寬度，並保持比例 */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block; 
+    margin: 0 auto; /* 圖片置中 */
+}
+/* 避免表格被切斷 */
+table {
+    page-break-inside: avoid;
+}
+/* 避免標題跟內文分家 */
+h1, h2, h3, h4, h5 {
+    page-break-after: avoid;
+}
+
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="financial-news-sentiment-analysis--stock-correlation">Financial News Sentiment Analysis &amp; Stock Correlation</h1>
+<h2 id="%F0%9F%93%96-%E5%B0%88%E6%A1%88%E7%B0%A1%E4%BB%8B-project-overview">📖 專案簡介 (Project Overview)</h2>
+<p>本專案旨在利用自然語言處理 (NLP) 技術分析財經新聞的情緒，並探討該情緒指標與美股主要指數（S&amp;P 500, NASDAQ, Dow Jones, Russell 2000）之間的相關性。</p>
+<h2 id="%F0%9F%92%BE-%E8%B3%87%E6%96%99%E4%BE%86%E6%BA%90-data-source">💾 資料來源 (Data Source)</h2>
+<p>本專案使用兩類不同的資料來源：</p>
+<h3 id="1-%E6%A8%A1%E5%9E%8B%E8%A8%93%E7%B7%B4%E8%B3%87%E6%96%99-model-fine-tuning-data">1. 模型訓練資料 (Model Fine-Tuning Data)</h3>
+<ul>
+<li><strong>來源</strong>: <a href="https://www.kaggle.com/datasets/ankurzing/sentiment-analysis-for-financial-news?select=all-data.csv">Kaggle - Sentiment Analysis for Financial News</a></li>
+<li><strong>描述</strong>: 使用該資料集中的 4,846 筆帶有情緒標籤（Positive, Neutral, Negative）的財經新聞標題，對 BERT 模型進行微調 (Fine-tuning)，使其具備判讀財經文本情緒的能力。</li>
+</ul>
+<h3 id="2-%E5%B8%82%E5%A0%B4%E5%88%86%E6%9E%90%E8%B3%87%E6%96%99-market-analysis-data">2. 市場分析資料 (Market Analysis Data)</h3>
+<p>本專案針對<strong>過去 30 天</strong>的市場動態進行分析，數據獲取分為文本與數值兩條路徑：</p>
+<ul>
+<li>
+<p><strong>新聞文本 (News Text Data)</strong></p>
+<ul>
+<li><strong>來源</strong>: Google News (透過爬蟲技術獲取)</li>
+<li><strong>範圍</strong>: 過去 30 天</li>
+<li><strong>用途</strong>: 獲取標題與摘要，輸入微調後的 BERT 模型以計算每日情緒分數 (Sentiment Score)。</li>
+</ul>
+</li>
+<li>
+<p><strong>市場數值 (Stock Market Data)</strong></p>
+<ul>
+<li><strong>來源</strong>: Yahoo Finance (透過 <code>yfinance</code> API)</li>
+<li><strong>範圍</strong>: 過去 30 天</li>
+<li><strong>用途</strong>: 獲取目標指數的每日收盤價 (Close Price) 與成交量，用於與情緒指標進行時間序列對齊與相關性分析。</li>
+</ul>
+</li>
+</ul>
+<h2 id="%F0%9F%9B%A0%EF%B8%8F-%E6%8A%80%E8%A1%93%E6%A3%A7-tech-stack">🛠️ 技術棧 (Tech Stack)</h2>
+<ul>
+<li><strong>語言</strong>: Python 3.x</li>
+<li><strong>數據處理</strong>: Pandas, NumPy</li>
+<li><strong>統計分析</strong>: Statsmodels (Dynamic Logit, Hypothesis Testing)</li>
+<li><strong>NLP 框架</strong>: Hugging Face Transformers, PyTorch</li>
+<li><strong>NLP 模型</strong>: FinBERT (Financial Bidirectional Encoder Representations from Transformers)</li>
+<li><strong>視覺化</strong>: Matplotlib, Seaborn</li>
+<li><strong>資料來源</strong>: Yahoo Finance (<code>yfinance</code>), Google News (<code>GoogleNews</code>), Kaggle Dataset</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h2 id="%E5%B0%88%E6%A1%88%E7%B5%90%E6%A7%8B-project-structure">專案結構 (Project Structure)</h2>
+<p>本專案依照數據處理流程分為四個主要步驟：</p>
+<ol>
+<li><strong>01_scraper.ipynb</strong>:
+<ul>
+<li>負責從財經新聞網站爬取標題與內文。</li>
+<li>資料清洗與初步格式化。</li>
+</ul>
+</li>
+<li><strong>02_bert_training.ipynb</strong>:
+<ul>
+<li>載入預訓練 BERT 模型。</li>
+<li>針對財經文本進行微調 (Fine-tuning)。</li>
+</ul>
+</li>
+<li><strong>03_inference.ipynb</strong>:
+<ul>
+<li>將爬取的新聞資料輸入模型，計算情緒分數 (Sentiment Score)。</li>
+</ul>
+</li>
+<li><strong>04_analysis.ipynb</strong>:
+<ul>
+<li>整合情緒分數與股價數據。</li>
+<li>進行時間序列分析與相關性檢定。</li>
+<li>產出視覺化圖表。</li>
+</ul>
+</li>
+</ol>
+
+<div style="page-break-after: always;"></div>
+
+
+<h2 id="%E6%83%85%E7%B7%92%E6%8C%87%E6%A8%99%E5%BB%BA%E6%A7%8B-sentiment-index-construction">情緒指標建構 (Sentiment Index Construction)</h2>
+<p>為了確保分析的穩健性 (Robustness)，本專案採用兩種不同的模式將新聞文本轉化為每日情緒指標：</p>
+<h3 id="%E6%A8%A1%E5%BC%8F%E4%B8%80%E5%9F%BA%E6%96%BC%E9%9B%A2%E6%95%A3%E6%A8%99%E7%B1%A4-discrete-classification">模式一：基於離散標籤 (Discrete Classification)</h3>
+<ul>
+<li><strong>方法</strong>: 將每一則新聞標題強制分類為 <strong>Positive (正面)</strong>、<strong>Negative (負面)</strong> 或 <strong>Neutral (中立)</strong> 三類。</li>
+<li><strong>每日聚合 (Aggregation)</strong>: 採用 <strong>Bullish Ratio (看漲比率)</strong> 計算當日市場情緒，忽略中立新聞的影響。</li>
+<li><strong>公式</strong>:
+$$B_t = \frac{N_{pos}}{N_{pos} + N_{neg}}$$
+<ul>
+<li>其中 $N_{pos}$ 為當日正面新聞數，$N_{neg}$ 為當日負面新聞數。</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E6%A8%A1%E5%BC%8F%E4%BA%8C%E5%9F%BA%E6%96%BC%E6%A9%9F%E7%8E%87%E5%88%86%E6%95%B8-continuous-probability-score">模式二：基於機率分數 (Continuous Probability Score)</h3>
+<ul>
+<li><strong>方法</strong>: 利用 FinBERT 輸出的 Logits 經過 <strong>Softmax</strong> 函數轉化為機率分佈，保留模型對情緒判斷的「信心程度」。</li>
+<li><strong>分數轉換</strong>: 將機率映射至 $[-1, 1]$ 區間（1 代表極度正面，-1 代表極度負面）。
+$$Score_i = P(Positive)_i - P(Negative)_i$$</li>
+<li><strong>每日聚合</strong>: 計算當日所有新聞分數的<strong>算術平均數 (Mean)</strong>。
+$$S_t = \frac{1}{n} \sum_{i=1}^{n} Score_i$$</li>
+</ul>
+<h3 id="%E6%8C%87%E6%A8%99%E4%B8%80%E8%87%B4%E6%80%A7%E8%88%87%E7%A9%A9%E5%81%A5%E6%80%A7%E6%AA%A2%E5%AE%9A-consistency--robustness-check">指標一致性與穩健性檢定 (Consistency &amp; Robustness Check)</h3>
+<p>為了確認上述兩種情緒指標建構方式是否捕捉到相同的市場訊號，本專案對「模式一 (Bullish Ratio)」與「模式二 (Sentiment Score)」進行了回歸分析與相關性檢定。</p>
+<p><img src="notebooks/plots/sentiment_correlation_check.png" alt="Sentiment Indices Correlation"></p>
+<ul>
+<li><strong>檢定方法</strong>: 對兩種指標進行線性回歸 (Linear Regression) 分析。
+$$Index_{Mode2} = \alpha + \beta \cdot Index_{Mode1} + \epsilon$$</li>
+<li><strong>結果</strong>:
+<ul>
+<li>兩者呈現<strong>高度正相關 (High Positive Correlation)</strong>。</li>
+<li>回歸圖顯示數據點緊密分布於趨勢線周圍，表明兩種計算方法雖然數學定義不同，但在捕捉市場情緒波動上具有高度的一致性。</li>
+</ul>
+</li>
+<li><strong>結論</strong>:
+由於兩者在統計特性上高度重疊，本專案在後續的 Dynamic Logit 模型分析中，可視為<strong>結果具有穩健性</strong>，選擇任一指標均不影響主要結論。</li>
+</ul>
+<div style="page-break-after: always;"></div>
+<h2 id="%F0%9F%93%8A-%E5%88%86%E6%9E%90%E7%B5%90%E6%9E%9C-key-results">📊 分析結果 (Key Results)</h2>
+<h3 id="1-%E7%9B%B8%E9%97%9C%E6%80%A7%E7%86%B1%E5%8A%9B%E5%9C%96-correlation-heatmap">1. 相關性熱力圖 (Correlation Heatmap)</h3>
+<p>觀察情緒指標與各大指數變動率之間的相關係數。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">S&amp;P 500 (SPY)</th>
+<th style="text-align:center">NASDAQ-100 (QQQ)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><img src="notebooks/plots/heatmap_S&amp;P_500_SPY.png" alt="SPY"></td>
+<td style="text-align:center"><img src="notebooks/plots/heatmap_NASDAQ-100_QQQ.png" alt="QQQ"></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Dow Jones (DIA)</th>
+<th style="text-align:center">Small Cap (IWM)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><img src="notebooks/plots/heatmap_Dow_Jones_DIA.png" alt="DIA"></td>
+<td style="text-align:center"><img src="notebooks/plots/heatmap_Small_Cap_IWM.png" alt="IWM"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-%E6%AF%8F%E6%97%A5%E6%83%85%E7%B7%92%E8%88%87%E8%82%A1%E5%83%B9%E8%B5%B0%E5%8B%A2-daily-trends">2. 每日情緒與股價走勢 (Daily Trends)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">S&amp;P 500 (SPY)</th>
+<th style="text-align:center">NASDAQ-100 (QQQ)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><img src="notebooks/plots/daily_result_S&amp;P_500_SPY.png" alt="SPY"></td>
+<td style="text-align:center"><img src="notebooks/plots/daily_result_NASDAQ-100_QQQ.png" alt="QQQ"></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Dow Jones (DIA)</th>
+<th style="text-align:center">Small Cap (IWM)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><img src="notebooks/plots/daily_result_Dow_Jones_DIA.png" alt="DIA"></td>
+<td style="text-align:center"><img src="notebooks/plots/daily_result_Small_Cap_IWM.png" alt="IWM"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-%E7%B5%B1%E8%A8%88%E6%AA%A2%E5%AE%9A%E8%88%87%E6%A8%A1%E5%9E%8B%E9%A9%97%E8%AD%89-statistical-verification">3. 統計檢定與模型驗證 (Statistical Verification)</h3>
+<p>為了更嚴謹地驗證情緒指標對市場走勢的預測能力 (Predictive Power)，而不僅僅是觀察相關性，本專案採用 <strong>Dynamic Logit Model</strong> 進行時間序列回歸檢定。</p>
+<h4 id="%E7%82%BA%E4%BB%80%E9%BA%BC%E9%81%B8%E6%93%87%E6%AD%A4%E6%A8%A1%E5%9E%8B-motivation">為什麼選擇此模型？ (Motivation)</h4>
+<ul>
+<li><strong>二元結果 (Binary Outcome)</strong>：金融市場充滿雜訊，直接預測股價數值 (Continuous Variable) 難度極高且誤差大。因此，本研究將問題簡化為預測市場「方向」：<strong>上漲 (1)</strong> 或 <strong>下跌 (0)</strong>。</li>
+</ul>
+<h4 id="a-%E6%A8%A1%E5%9E%8B%E8%A8%AD%E5%AE%9A-model-specification">A. 模型設定 (Model Specification)</h4>
+<ol>
+<li>
+<p><strong>基準模型 (Naive Baseline)</strong>:</p>
+<ul>
+<li><strong>定義</strong>: 假設投資人僅知曉市場的歷史上漲機率，並採取「始終猜測機率較高者 (Always Predict Majority Class)」的策略。</li>
+<li><strong>計算方式</strong>: Accuracy = $\max(P(Up), P(Down))$</li>
+<li><strong>目的</strong>: 作為模型性能的下限 (Lower Bound)，驗證模型是否學習到數據中的非顯著特徵。</li>
+</ul>
+</li>
+<li>
+<p><strong>情緒增強模型 (Sentiment Augmented Model)</strong>:</p>
+<ul>
+<li><strong>機制</strong>: 在控制了市場自我回歸 (Autoregressive) 的慣性特徵後，檢驗加入昨日情緒指標 $S_{t-1}$ 是否能顯著提升模型的解釋力。</li>
+<li><strong>公式</strong>: $\ln(\frac{P_t}{1-P_t}) = \alpha + \gamma Y_{t-1} + \beta S_{t-1}$</li>
+</ul>
+</li>
+</ol>
+<p>其中：</p>
+<ul>
+<li>$P(Y_t=1)$：預測第 $t$ 天市場上漲的機率。</li>
+<li>$\text{Sentiment}_{t-1}$：第 $t-1$ 天經過 BERT 模型計算出的加權情緒分數。</li>
+<li>$\beta$：我們最關注的係數，若 $\beta$ 顯著異於 0，即證明情緒指標具有預測力。</li>
+</ul>
+<h4 id="b-%E6%AA%A2%E5%AE%9A%E7%B5%90%E6%9E%9C-empirical-results">B. 檢定結果 (Empirical Results)</h4>
+<p>由於樣本期間限制 ($N=20$)，統計檢定力受到一定影響，但在科技股權重較高的 <strong>NASDAQ-100 (QQQ)</strong> 與大盤 <strong>S&amp;P 500 (SPY)</strong> 中，觀察到顯著或邊緣顯著的預測效果。</p>
+<p><strong>1. 綜合比較表 (Summary Statistics)</strong>
+下表展示了四個主要指數在動態 Logit 模型下的表現：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">指數 (Ticker)</th>
+<th style="text-align:center">模型準確率 (Accuracy)</th>
+<th style="text-align:center">基準準確率 (Baseline)</th>
+<th style="text-align:center">提升幅度 (Lift)</th>
+<th style="text-align:center">情緒係數 ($\beta$)</th>
+<th style="text-align:center">P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>NASDAQ-100 (QQQ)</strong></td>
+<td style="text-align:center"><strong>65.00%</strong></td>
+<td style="text-align:center">55.00%</td>
+<td style="text-align:center"><strong>+10%</strong></td>
+<td style="text-align:center"><strong>14.61</strong></td>
+<td style="text-align:center"><strong>0.091</strong>*</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>S&amp;P 500 (SPY)</strong></td>
+<td style="text-align:center"><strong>65.00%</strong></td>
+<td style="text-align:center">60.00%</td>
+<td style="text-align:center">+5%</td>
+<td style="text-align:center">14.62</td>
+<td style="text-align:center">0.107</td>
+</tr>
+<tr>
+<td style="text-align:left">Dow Jones (DIA)</td>
+<td style="text-align:center">60.00%</td>
+<td style="text-align:center">55.00%</td>
+<td style="text-align:center">+5%</td>
+<td style="text-align:center">9.06</td>
+<td style="text-align:center">0.197</td>
+</tr>
+<tr>
+<td style="text-align:left">Small Cap (IWM)</td>
+<td style="text-align:center">60.00%</td>
+<td style="text-align:center">60.00%</td>
+<td style="text-align:center">0%</td>
+<td style="text-align:center">7.99</td>
+<td style="text-align:center">0.281</td>
+</tr>
+</tbody>
+</table>
+<p><small>*註：P-value &lt; 0.1 代表在 10% 信心水準下顯著。</small></p>
+<p><strong>2. 關鍵發現 (Key Findings)</strong></p>
+<ul>
+<li><strong>情緒顯著性</strong>: 在 NASDAQ-100 指數中，昨日情緒指標 (<code>Lag_Avg_Sentiment</code>) 的係數為 <strong>14.61</strong> ($p=0.091$)，顯示情緒與隔日上漲機率呈現<strong>顯著正相關</strong>。</li>
+<li><strong>模型預測力</strong>: 加入情緒指標後，QQQ 的預測準確率較基準模型提升了 <strong>10 個百分點</strong> (55% $\to$ 65%)；S&amp;P 500 亦提升了 5 個百分點。</li>
+<li><strong>市場慣性</strong>: 變數 <code>Lag_Return</code> 在所有模型中均未達顯著水準 ($p &gt; 0.3$)，顯示在過去 30 天的震盪行情中，單純的價格慣性 (Momentum) 無法有效預測未來，反而突顯了新聞情緒作為額外訊號的價值。</li>
+</ul>
+<blockquote>
+<p><strong>結論解讀</strong>:
+由於本專案分析區間較短 (樣本數=20)，P-value 對極端值較為敏感。儘管 SPY 與 QQQ 呈現正向訊號，但建議未來在更長的數據區間下進行驗證以確認其長期穩健性。</p>
+</blockquote>
+<hr>
+
+<div style="page-break-after: always;"></div>
+
+<h2 id="how-to-run">How to Run</h2>
+<ol>
+<li>
+<p><strong>建立環境與安裝依賴</strong>:</p>
+<pre class="hljs"><code><div>pip install -r requirements.txt
+</div></code></pre>
+</li>
+<li>
+<p><strong>執行流程</strong>:
+請依序執行 <code>notebooks/</code> 資料夾中的 Jupyter Notebook：</p>
+<ul>
+<li><strong><code>01_scraper.ipynb</code></strong>: 抓取最新數據
+<blockquote>
+<p><strong>Tip</strong>: 強烈建議在 <strong>Google Colab</strong> 上執行此步驟。由於 Colab 每次啟動虛擬機都會分配新的 IP 位址 (Dynamic IP Allocation)，這能有效降低爬蟲因頻繁請求而被目標網站封鎖 (IP Blocking) 的風險。</p>
+</blockquote>
+</li>
+<li><strong><code>02_bert_training.ipynb</code></strong>: 進行模型訓練 (或直接載入權重)</li>
+<li><strong><code>03_inference.ipynb</code></strong>: 計算情緒分數</li>
+<li><strong><code>04_analysis.ipynb</code></strong>: 產出最終報表與視覺化</li>
+</ul>
+</li>
+</ol>
+
+</body>
+</html>

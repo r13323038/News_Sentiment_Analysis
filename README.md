@@ -1,9 +1,9 @@
 # Financial News Sentiment Analysis & Stock Correlation
 
-## 📖 專案簡介 (Project Overview)
+## 專案簡介 (Project Overview)
 本專案旨在利用自然語言處理 (NLP) 技術分析財經新聞的情緒，並探討該情緒指標與美股主要指數（S&P 500, NASDAQ, Dow Jones, Russell 2000）之間的相關性。
 
-## 💾 資料來源 (Data Source)
+## 資料來源 (Data Source)
 本專案使用兩類不同的資料來源：
 
 ### 1. 模型訓練資料 (Model Fine-Tuning Data)
@@ -23,7 +23,7 @@
     * **範圍**: 過去 30 天
     * **用途**: 獲取目標指數的每日收盤價 (Close Price) 與成交量，用於與情緒指標進行時間序列對齊與相關性分析。
   
-## 🛠️ 技術棧 (Tech Stack)
+## 技術棧 (Tech Stack)
 * **語言**: Python 3.x
 * **數據處理**: Pandas, NumPy
 * **統計分析**: Statsmodels (Dynamic Logit, Hypothesis Testing)
@@ -79,7 +79,7 @@
     由於兩者在統計特性上高度重疊，本專案在後續的 Dynamic Logit 模型分析中，可視為**結果具有穩健性**，選擇任一指標均不影響主要結論。
 
 
-## 📊 分析結果 (Key Results)
+## 分析結果 (Key Results)
 
 ### 1. 相關性熱力圖 (Correlation Heatmap)
 觀察情緒指標與各大指數變動率之間的相關係數。
