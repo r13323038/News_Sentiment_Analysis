@@ -23,12 +23,14 @@
     * **範圍**: 過去 30 天
     * **用途**: 獲取目標指數的每日收盤價 (Close Price) 與成交量，用於與情緒指標進行時間序列對齊與相關性分析。
   
-## 技術棧 (Tech Stack)
+## 🛠️ 技術棧 (Tech Stack)
 * **語言**: Python 3.x
 * **數據處理**: Pandas, NumPy
-* **NLP 模型**: BERT (Bidirectional Encoder Representations from Transformers)
-* **視覺化**: Matplotlib, Seaborn / Plotly
-* **資料來源**: Yahoo Finance (Scraping)
+* **統計分析**: Statsmodels (Dynamic Logit, Hypothesis Testing)
+* **NLP 框架**: Hugging Face Transformers, PyTorch
+* **NLP 模型**: FinBERT (Financial Bidirectional Encoder Representations from Transformers)
+* **視覺化**: Matplotlib, Seaborn
+* **資料來源**: Yahoo Finance (`yfinance`), Google News (`GoogleNews`), Kaggle Dataset
 
 ## 專案結構 (Project Structure)
 本專案依照數據處理流程分為四個主要步驟：
@@ -118,7 +120,7 @@
   
 2.  **情緒增強模型 (Sentiment Augmented Model)**: 
     * **機制**: 在控制了市場自我回歸 (Autoregressive) 的慣性特徵後，檢驗加入昨日情緒指標 $S_{t-1}$ 是否能顯著提升模型的解釋力。
-    * **公式**: $\ln(\frac{P_t}{1-P_t}) = \alpha + \gamma Y_{t-1} + \beta S_{t-1} + \epsilon_t$
+    * **公式**: $\ln(\frac{P_t}{1-P_t}) = \alpha + \gamma Y_{t-1} + \beta S_{t-1}$
 
 其中：
 * $P(Y_t=1)$：預測第 $t$ 天市場上漲的機率。
@@ -126,15 +128,41 @@
 * $\beta$：我們最關注的係數，若 $\beta$ 顯著異於 0，即證明情緒指標具有預測力。
 
 #### B. 檢定結果 (Empirical Results)
-針對 S&P 500 指數 (SPY) 的比較分析顯示：
+由於樣本期間限制 ($N=20$)，統計檢定力受到一定影響，但在科技股權重較高的 **NASDAQ-100 (QQQ)** 與大盤 **S&P 500 (SPY)** 中，觀察到顯著或邊緣顯著的預測效果。
 
-* **係數檢定**: 情緒指標係數 $\beta$ 為 **X.XXX (請填入)**，且 P-value 為 **0.0XX**，達顯著水準。
-* **模型比較 (Likelihood Ratio Test)**:
-    * 加入情緒指標後，模型的 Log-Likelihood 顯著提升。
-    * **LR Test P-value**: **0.0XX (請填入)**，拒絕「情緒指標無用」的虛無假設。
-* **預測力提升**:
-    * 相較於基準模型，情緒模型的準確率 (Accuracy) / 偽 $R^2$ (Pseudo-R squared) 提升了約 **Y%**。
+**1. 綜合比較表 (Summary Statistics)**
+下表展示了四個主要指數在動態 Logit 模型下的表現：
 
-> **結論**: 即使在控制了市場原有的自回歸特性後，財經新聞情緒依然對隔日股價走勢具有顯著的預測能力。
+| 指數 (Ticker) | 模型準確率 (Accuracy) | 基準準確率 (Baseline) | 提升幅度 (Lift) | 情緒係數 ($\beta$) | P-value |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **NASDAQ-100 (QQQ)** | **65.00%** | 55.00% | **+10%** | **14.61** | **0.091*** |
+| **S&P 500 (SPY)** | **65.00%** | 60.00% | +5% | 14.62 | 0.107 |
+| Dow Jones (DIA) | 60.00% | 55.00% | +5% | 9.06 | 0.197 |
+| Small Cap (IWM) | 60.00% | 60.00% | 0% | 7.99 | 0.281 |
+<small>*註：P-value < 0.1 代表在 10% 信心水準下顯著。</small>
+
+**2. 關鍵發現 (Key Findings)**
+* **情緒顯著性**: 在 NASDAQ-100 指數中，昨日情緒指標 (`Lag_Avg_Sentiment`) 的係數為 **14.61** ($p=0.091$)，顯示情緒與隔日上漲機率呈現**顯著正相關**。
+* **模型預測力**: 加入情緒指標後，QQQ 的預測準確率較基準模型提升了 **10 個百分點** (55% $\to$ 65%)；S&P 500 亦提升了 5 個百分點。
+* **市場慣性**: 變數 `Lag_Return` 在所有模型中均未達顯著水準 ($p > 0.3$)，顯示在過去 30 天的震盪行情中，單純的價格慣性 (Momentum) 無法有效預測未來，反而突顯了新聞情緒作為額外訊號的價值。
+
+> **結論解讀**: 
+> 由於本專案分析區間較短 (樣本數=20)，P-value 對極端值較為敏感。儘管 SPY 與 QQQ 呈現正向訊號，但建議未來在更長的數據區間下進行驗證以確認其長期穩健性。
+
+---
+
+## How to Run
+1. **建立環境與安裝依賴**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **執行流程**:
+   請依序執行 `notebooks/` 資料夾中的 Jupyter Notebook：
+   * **`01_scraper.ipynb`**: 抓取最新數據
+     > **Tip**: 強烈建議在 **Google Colab** 上執行此步驟。由於 Colab 每次啟動虛擬機都會分配新的 IP 位址 (Dynamic IP Allocation)，這能有效降低爬蟲因頻繁請求而被目標網站封鎖 (IP Blocking) 的風險。
+   * **`02_bert_training.ipynb`**: 進行模型訓練 (或直接載入權重)
+   * **`03_inference.ipynb`**: 計算情緒分數
+   * **`04_analysis.ipynb`**: 產出最終報表與視覺化
 
 
