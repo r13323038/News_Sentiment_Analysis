@@ -10,7 +10,7 @@ This project aims to analyze the sentiment of financial news using **Natural Lan
 
 It combines **Data Engineering** (automated scraping pipeline), **Deep Learning** (FinBERT), and **Econometrics** (Dynamic Logit Model) to verify the predictive power of market sentiment.
 
-## 🚀 Key Results (Highlights)
+##  Key Results (Highlights)
 
 ### 1. Sentiment Predicts Market Direction
 Using a **Dynamic Logit Model**, we found that news sentiment significantly improves prediction accuracy for tech-heavy indices.
@@ -27,7 +27,7 @@ Using a **Dynamic Logit Model**, we found that news sentiment significantly impr
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 * **Language**: Python 3.8+
 * **NLP Framework**: Hugging Face Transformers (FinBERT), PyTorch
 * **Data Engineering**: Selenium, BeautifulSoup, yfinance API
@@ -42,7 +42,7 @@ Using a **Dynamic Logit Model**, we found that news sentiment significantly impr
 
 ---
 
-## 💻 How to Run
+##  How to Run
 
 1.  **Environment Setup**:
     ```bash
@@ -57,7 +57,7 @@ Using a **Dynamic Logit Model**, we found that news sentiment significantly impr
 
 ---
 
-## 🔬 Methodology & Statistical Verification
+##  Methodology & Statistical Verification
 
 <details>
 <summary><strong>Click to view: Sentiment Index Construction (Math)</strong></summary>
@@ -104,7 +104,7 @@ $$\ln(\frac{P_t}{1-P_t}) = \alpha + \gamma Y_{t-1} + \beta S_{t-1}$$
 
 本專案實作了從**自動化爬蟲**、**BERT 模型推論**到**時間序列分析**的完整資料管線。
 
-## 📊 關鍵分析結果
+##  關鍵分析結果
 
 ### 1. 情緒指標具有預測力
 透過動態 Logit 模型驗證，我們發現加入情緒指標能顯著提升對科技股指數的預測準確率。
@@ -120,14 +120,14 @@ $$\ln(\frac{P_t}{1-P_t}) = \alpha + \gamma Y_{t-1} + \beta S_{t-1}$$
 
 ---
 
-## 🛠 技術棧 (Tech Stack)
+##  技術棧 (Tech Stack)
 * **語言**: Python 3.8+
 * **NLP 模型**: FinBERT (Hugging Face Transformers)
 * **資料工程**: Selenium, BeautifulSoup, Google Colab (IP Rotation)
 * **統計分析**: Statsmodels (Dynamic Logit), Pandas
 * **視覺化**: Matplotlib, Seaborn
 
-## 📂 專案結構
+##  專案結構
 1.  **`01_scraper.ipynb`**: 爬取 Google News 財經新聞（處理反爬蟲機制）。
 2.  **`02_bert_training.ipynb`**: 載入 FinBERT 預訓練模型進行微調。
 3.  **`03_inference.ipynb`**: 計算每日新聞情緒分數。
@@ -149,7 +149,7 @@ $$\ln(\frac{P_t}{1-P_t}) = \alpha + \gamma Y_{t-1} + \beta S_{t-1}$$
 
 ---
 
-## 🔬 方法論與統計檢定細節
+##  方法論與統計檢定細節
 
 <details>
 <summary><strong>點擊展開：情緒指標建構公式 (Math)</strong></summary>
