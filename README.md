@@ -1,183 +1,139 @@
-# Financial News Sentiment Analysis & Stock Correlation
+# Financial News Sentiment and U.S. Equity Markets
 
-The English version of this documentation was translated and refined with the assistance of Large Language Models (LLMs) to ensure clarity and accuracy.
----
+An exploratory study of financial news sentiment and daily market direction across four U.S. equity ETFs: QQQ, SPY, DIA, and IWM.
 
-<div id="english"></div>
+The project connects news collection, FinBERT fine-tuning, headline inference, and logistic regression in four Python notebooks. It examines how financial text can be converted into market-level features and compared with subsequent price movements.
 
-## Project Overview
-This project aims to analyze the sentiment of financial news using **Natural Language Processing (NLP)** techniques and investigate the correlation between these sentiment indicators and major U.S. stock indices (S&P 500, NASDAQ, Dow Jones, Russell 2000).
+**Current findings:** the saved analysis reports 65% in-sample accuracy for QQQ against a 55% majority-class baseline, using 20 observations. These results describe a small historical sample; out-of-sample predictive performance has not been established.
 
-It combines **Data Engineering** (automated scraping pipeline), **Deep Learning** (FinBERT), and **Econometrics** (Dynamic Logit Model) to verify the predictive power of market sentiment.
+[Results](#results) · [Method](#method) · [Notebooks](#notebooks) · [Reproduction](#reproduction) · [中文摘要](#中文摘要)
 
-##  Key Results (Highlights)
+## Results
 
-### 1. Sentiment Predicts Market Direction
-Using a **Dynamic Logit Model**, we found that news sentiment significantly improves prediction accuracy for tech-heavy indices.
+The following values come from the saved output of [04_analysis.ipynb](notebooks/04_analysis.ipynb). The Logit model is fitted and evaluated on the same observations, with a classification threshold of 0.5. The baseline always predicts the more frequent market direction in that sample.
 
-* **NASDAQ-100 (QQQ):** Prediction accuracy improved by **+10%** (Baseline 55% $\to$ Model 65%).
-* **Statistical Significance:** The sentiment coefficient was significant ($p=0.091$), confirming that yesterday's news sentiment positively correlates with today's market rise.
+| ETF | Market exposure | Observations | In-sample accuracy | Majority baseline | Difference | Mean sentiment coefficient | p-value |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| QQQ | Nasdaq-100 | 20 | 65% | 55% | +10 pp | 14.61 | 0.091 |
+| SPY | S&P 500 | 20 | 65% | 60% | +5 pp | 14.62 | 0.107 |
+| DIA | Dow Jones Industrial Average | 20 | 60% | 55% | +5 pp | 9.06 | 0.197 |
+| IWM | Russell 2000 | 20 | 60% | 60% | 0 pp | 7.99 | 0.281 |
 
-### 2. Correlation Heatmap
-*Sentiment indices show strong correlation with market movements, especially in volatile periods.*
+Differences are in percentage points. For QQQ, +10 pp represents two additional correctly classified observations. Its sentiment coefficient meets a nominal 10% significance threshold, but not 5%; the reported p-values are not adjusted for testing multiple ETFs. The majority baseline comparison does not isolate the incremental contribution of sentiment relative to a return-only model.
 
-| NASDAQ-100 (QQQ) | S&P 500 (SPY) |
-| :---: | :---: |
-| ![QQQ Heatmap](notebooks/plots/heatmap_NASDAQ-100_QQQ.png) | ![SPY Heatmap](notebooks/plots/heatmap_S&P_500_SPY.png) |
+## Method
 
----
+### News and sentiment classification
 
-##  Tech Stack
-* **Language**: Python 3.8+
-* **NLP Framework**: Hugging Face Transformers (FinBERT), PyTorch
-* **Data Engineering**: Selenium, BeautifulSoup, yfinance API
-* **Statistical Analysis**: Statsmodels (Dynamic Logit), NumPy, Pandas
-* **Visualization**: Matplotlib, Seaborn
+The collection notebook queries Google News for Yahoo Finance headlines using source-related keywords and exclusions. Its settings target 30 days ending December 14, 2025. Search filters define the intended coverage; they do not establish a complete or independently verified news universe.
 
-## 📂 Project Structure
-1.  **`01_scraper.ipynb`**: Scrapes headlines/content from Google News (handles IP rotation).
-2.  **`02_bert_training.ipynb`**: Loads/Fine-tunes the FinBERT model.
-3.  **`03_inference.ipynb`**: Calculates daily Sentiment Scores.
-4.  **`04_analysis.ipynb`**: Integrates data, runs Logit regressions, and generates plots.
+The training notebook fine-tunes `ProsusAI/finbert` for three sentiment classes using a local, headerless CSV with `sentiment,text` columns. Saved output records 4,846 labeled examples. The code uses a stratified 80/10/10 train, validation, and test split, three training epochs, and a learning rate of `2e-5`.
 
----
+The local class mapping is `negative=0`, `neutral=1`, and `positive=2`. Inference applies the fine-tuned model to headlines and produces both a class label and a continuous score:
 
-##  How to Run
+$$
+s_i = P(\text{positive}\mid h_i) - P(\text{negative}\mid h_i)
+$$
 
-1.  **Environment Setup**:
-    ```bash
-    git clone [https://github.com/YOUR_USERNAME/REPO_NAME.git](https://github.com/YOUR_USERNAME/REPO_NAME.git)
-    pip install -r requirements.txt
-    ```
+Here, $h_i$ is a headline. Scores range from −1 to 1. Accuracy and weighted F1 are defined for classifier evaluation, but the committed notebook does not retain final test metrics.
 
-2.  **Execution Flow**:
-    Run the notebooks in numerical order (`01` -> `04`).
-    
-    > **💡 Pro Tip:** It is highly recommended to run `01_scraper.ipynb` on **Google Colab**. Since Colab assigns a new Dynamic IP each session, this effectively prevents IP blocking from target news websites.
+### Aggregate sentiment features
 
----
+Headline scores are aggregated by date into a mean, standard deviation, and news count. A count-based measure is also constructed:
 
-##  Methodology & Statistical Verification
+$$
+S_d = \frac{1}{n_d}\sum_{i=1}^{n_d}s_i,
+\qquad
+B_d = \frac{N_{\text{positive},d}}{N_{\text{positive},d}+N_{\text{negative},d}}
+$$
 
-<details>
-<summary><strong>Click to view: Sentiment Index Construction (Math)</strong></summary>
+The bullish ratio excludes neutral headlines; it defaults to 0.5 when there are no positive or negative labels. The saved analysis reports a correlation of 0.9722 between mean sentiment and the bullish ratio. This measures agreement between two summaries of the same classifier output.
 
-### 1. Discrete Classification (Bullish Ratio)
-Forces headlines into Positive/Negative/Neutral.
-$$B_t = \frac{N_{pos}}{N_{pos} + N_{neg}}$$
+![Mean sentiment score versus count-based bullish ratio](notebooks/plots/sentiment_correlation_check.png)
 
-### 2. Continuous Probability Score
-Uses Softmax probabilities from FinBERT logits to preserve confidence levels.
-$$S_t = \frac{1}{n} \sum_{i=1}^{n} (P(Pos)_i - P(Neg)_i)$$
+*Saved comparison of the two sentiment measures. This figure does not measure correlation with market returns.*
 
-</details>
+### Market-direction model
 
-<details>
-<summary><strong>Click to view: Dynamic Logit Model Results (Full Table)</strong></summary>
+Adjusted ETF prices are downloaded with `yfinance` for the configured period from October 25 to December 16, 2025. The regression target is whether the daily close-to-close log return is positive. The fitted specification is:
 
-We utilized a Dynamic Logit Model to predict market direction (Up/Down):
-$$\ln(\frac{P_t}{1-P_t}) = \alpha + \gamma Y_{t-1} + \beta S_{t-1}$$
+$$
+\log\frac{P(Y_t=1)}{1-P(Y_t=1)}
+= \alpha + \beta_1 M^{*}_{t-1} + \beta_2 V^{*}_{t-1} + \gamma r_{t-1}
+$$
 
-**Summary Statistics:**
+Here, $r_{t-1}$ is the prior market log return in percentage units. $M^{*}$ and $V^{*}$ are sentiment features after the notebook's date mapping: dates are moved forward, Friday through Sunday are grouped into Monday, and the resulting feature rows are shifted once more before merging with market prices. Grouped mean sentiment is weighted by news count; grouped dispersion uses the maximum daily standard deviation.
 
-| Ticker | Model Accuracy | Lift | Sentiment Coeff ($\beta$) | P-value |
-| :--- | :---: | :---: | :---: | :---: |
-| **NASDAQ-100 (QQQ)** | **65.00%** | **+10%** | **14.61** | **0.091*** |
-| **S&P 500 (SPY)** | **65.00%** | +5% | 14.62 | 0.107 |
-| Dow Jones (DIA) | 60.00% | +5% | 9.06 | 0.197 |
-| Small Cap (IWM) | 60.00% | 0% | 7.99 | 0.281 |
+This alignment is an implementation convention, not a verified publication-time alignment. It does not use a U.S. exchange holiday calendar. The bullish ratio is computed for comparison but is not included among the fitted regressors.
 
-<small>*Note: P-value < 0.1 indicates significance at the 10% confidence level.*</small>
+## Notebooks
 
-</details>
+| Notebook | Role | Main input or output |
+| --- | --- | --- |
+| [01_scraper.ipynb](notebooks/01_scraper.ipynb) | Collect search results and deduplicate links | Daily CSVs with `date`, `title`, `media`, `link` |
+| [02_bert_training.ipynb](notebooks/02_bert_training.ipynb) | Fine-tune FinBERT and evaluate sentiment classification | `data/archive/all_data.csv` → `models/finbert_sentiment/` |
+| [03_inference.ipynb](notebooks/03_inference.ipynb) | Deduplicate headlines and infer sentiment | `data/news_data/*.csv` → in-memory headline scores and labels |
+| [04_analysis.ipynb](notebooks/04_analysis.ipynb) | Aggregate features, fit Logit models, and generate figures | `data/output/sentiment_data.csv` → regression output and `notebooks/plots/` |
 
-<br>
-<br>
+News collection and classifier training can be prepared independently. Inference requires both the news CSVs and the trained model; analysis then requires an exported inference CSV.
 
----
----
+The implementation uses Python, GoogleNews, pandas, Hugging Face Transformers and Datasets, PyTorch, scikit-learn, statsmodels, yfinance, Matplotlib, and Seaborn.
 
-<div id="chinese"></div>
+## Reproduction
 
-## 專案簡介 (Chinese Overview)
-本專案利用自然語言處理 (NLP) 技術分析財經新聞情緒，並結合計量經濟模型（Dynamic Logit Model），探討情緒指標與美股主要指數（S&P 500, NASDAQ, Dow Jones）之預測相關性。
+This repository preserves research notebooks and saved figures. Data files and model weights are excluded by `.gitignore`, and the current notebooks require manual corrections before an end-to-end run.
 
-本專案實作了從**自動化爬蟲**、**BERT 模型推論**到**時間序列分析**的完整資料管線。
+### Environment and local files
 
-##  關鍵分析結果
+```bash
+git clone https://github.com/r13323038/News_Sentiment_Analysis.git
+cd News_Sentiment_Analysis
+python -m venv .venv
+```
 
-### 1. 情緒指標具有預測力
-透過動態 Logit 模型驗證，我們發現加入情緒指標能顯著提升對科技股指數的預測準確率。
+Activate the virtual environment using the command for your operating system. Notebook metadata records Python 3.13.2. [requirements.txt](requirements.txt) is an environment snapshot containing CUDA-specific PyTorch pins (`torch==2.9.1+cu126` and `torchvision==0.24.1+cu126`); installation requires a compatible package source and platform. For CPU or macOS use, those pins need to be adapted. The `Trainer` workflow also requires `accelerate`, which is absent from the snapshot. A clean installation has not been verified.
 
-* **NASDAQ-100 (QQQ)**：預測準確率提升 **10%** (基準 55% $\to$ 模型 65%)。
-* **統計顯著性**：情緒係數顯著 ($p=0.091$)，證實昨日新聞情緒與今日市場上漲機率呈正相關。
+Prepare the following files and folders outside version control:
 
-### 2. 相關性熱力圖
+```text
+data/
+├── archive/all_data.csv          # Headerless sentiment,text training data
+├── news_data/*.csv              # News CSVs: date,title,media,link
+└── output/sentiment_data.csv    # Inference export consumed by analysis
+models/
+└── finbert_sentiment/           # Model and tokenizer saved by notebook 02
+```
 
-| NASDAQ-100 (QQQ) | S&P 500 (SPY) |
-| :-: | :-: |
-| ![QQQ Heatmap](notebooks/plots/heatmap_NASDAQ-100_QQQ.png) | ![SPY Heatmap](notebooks/plots/heatmap_S&P_500_SPY.png) |
+Open the notebooks with a Python kernel and use `notebooks/` as the working directory: their relative paths assume this location. The labeled dataset's source and acquisition instructions are not documented in the repository and must be established separately.
 
----
+### Required notebook corrections
 
-##  技術棧 (Tech Stack)
-* **語言**: Python 3.8+
-* **NLP 模型**: FinBERT (Hugging Face Transformers)
-* **資料工程**: Selenium, BeautifulSoup, Google Colab (IP Rotation)
-* **統計分析**: Statsmodels (Dynamic Logit), Pandas
-* **視覺化**: Matplotlib, Seaborn
+1. In `01_scraper.ipynb`, close the unfinished `print(...)` in the exception handler. Replace the undefined `base_dir` output configuration with the intended news folder, such as `drive_folder = os.path.join(project_root, 'data', 'news_data')`.
+2. Run `02_bert_training.ipynb` with the labeled CSV available. Preserve its class mapping when loading the exported model for inference.
+3. After inference in `03_inference.ipynb`, export the results expected by notebook 04:
 
-##  專案結構
-1.  **`01_scraper.ipynb`**: 爬取 Google News 財經新聞（處理反爬蟲機制）。
-2.  **`02_bert_training.ipynb`**: 載入 FinBERT 預訓練模型進行微調。
-3.  **`03_inference.ipynb`**: 計算每日新聞情緒分數。
-4.  **`04_analysis.ipynb`**: 整合股價數據，執行回歸分析與視覺化。
+   ```python
+   output_path = project_root / "data" / "output" / "sentiment_data.csv"
+   output_path.parent.mkdir(parents=True, exist_ok=True)
+   df_news.to_csv(output_path, index=False, encoding="utf-8-sig")
+   ```
 
----
+4. Run `04_analysis.ipynb`. Its final cell calls `dfi.export`; add `import dataframe_image as dfi` if generating the daily report images.
 
-## 💻 如何執行 (How to Run)
+These steps describe the missing connections identified from source inspection. The saved notebooks have not been rerun as part of this documentation update, and their outputs should not be treated as a reproducible execution record.
 
-1.  **安裝依賴**:
-    ```bash
-    pip install -r requirements.txt
-    ```
+## Research limitations
 
-2.  **執行順序**:
-    請依序執行 `notebooks/` 中的 Jupyter Notebook (`01` -> `04`)。
+- **Sample and evaluation.** Each market regression uses only 20 observations, with no chronological holdout or walk-forward evaluation. In-sample accuracy and nominal p-values provide limited evidence about generalization.
+- **Timing and coverage.** Search dates are not verified article publication timestamps. Calendar mapping and the additional row shift require an exchange-calendar and information-availability audit before interpreting the features as tradable signals.
+- **Classifier evaluation.** Labeled-data provenance, possible overlap with the pretrained model's data, final classification metrics, and probability calibration need verification before interpreting the sentiment scores as validated measurements.
+- **Saved-output consistency.** Inference output reports 2,128 deduplicated headlines, while analysis output reports 2,024. The committed files do not explain that difference, so the two stages cannot yet be reconciled to one data snapshot.
+- **Economic interpretation.** The notebooks contain no portfolio backtest, transaction costs, or risk-adjusted performance analysis. Classification accuracy alone does not establish investment value.
 
-    > **💡 實戰技巧:** 強烈建議在 **Google Colab** 上執行 `01_scraper.ipynb`。由於 Colab 每次啟動都會分配新的動態 IP，這能有效規避目標新聞網站的 IP 封鎖 (IP Blocking) 機制。
+## 中文摘要
 
----
+本專案以財經新聞標題為輸入，串接 Google News 資料蒐集、FinBERT 微調、情緒推論與動態 Logit 分析，探索新聞情緒與 QQQ、SPY、DIA、IWM 每日漲跌的關係。實作重點是將非結構化文字轉換為每日情緒特徵，再與市場資料整合。
 
-##  方法論與統計檢定細節
+現存 notebook 輸出中，QQQ 的樣本內準確率為 65%，高於多數類別基準的 55%，相差 10 個百分點；但迴歸僅使用 20 筆觀測，且在同一批資料上擬合與評估。情緒係數的 p-value 為 0.091，未達 5% 顯著水準，也未做多重檢定調整。目前結果適合定位為探索性研究，尚不足以主張已驗證的樣本外預測能力或交易績效。
 
-<details>
-<summary><strong>點擊展開：情緒指標建構公式 (Math)</strong></summary>
-
-### 模式一：離散標籤 (Bullish Ratio)
-$$B_t = \frac{N_{pos}}{N_{pos} + N_{neg}}$$
-
-### 模式二：連續機率分數 (Continuous Probability)
-利用 Softmax 機率保留模型信心程度：
-$$S_t = \frac{1}{n} \sum_{i=1}^{n} Score_i$$
-
-</details>
-
-<details>
-<summary><strong>點擊展開：Dynamic Logit 模型詳細報表</strong></summary>
-
-我們使用時間序列 Logit 模型預測市場漲跌：
-$$\ln(\frac{P_t}{1-P_t}) = \alpha + \gamma Y_{t-1} + \beta S_{t-1}$$
-
-**實證結果摘要：**
-
-| 指數 | 模型準確率 | 提升幅度 (Lift) | 情緒係數 ($\beta$) | P-value |
-| :--- | :---: | :---: | :---: | :---: |
-| **NASDAQ-100 (QQQ)** | **65.00%** | **+10%** | **14.61** | **0.091*** |
-| **S&P 500 (SPY)** | **65.00%** | +5% | 14.62 | 0.107 |
-| Dow Jones (DIA) | 60.00% | +5% | 9.06 | 0.197 |
-| Small Cap (IWM) | 60.00% | 0% | 7.99 | 0.281 |
-
-<small>*註：P-value < 0.1 代表在 10% 信心水準下顯著。*</small>
-
-</details>
+重現分析前，需另行準備未納入版本控制的訓練資料、新聞資料與模型權重，並完成上述 notebook 銜接修正。後續研究應優先釐清資料來源、核對新聞可用時間與交易日對齊，再以時間順序切分或滾動樣本外評估檢驗結果。
